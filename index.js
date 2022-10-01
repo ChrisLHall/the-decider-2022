@@ -28,3 +28,7 @@ function createDecisionEntry(title, optionsList, startDate, endDate) {
 function addDecisionEntryToPage(entry) {
 
 }
+
+function onClickChooseForMe() {
+  console.log("hi");
+}

@@ -11,6 +11,23 @@
 
 <body>
 <div id="createEntry">
+  Title: <input id="titleInput" type="text" />
+  Options:
+  <textarea id="optionsInput"></textarea>
+  How long:
+  <input type="radio" id="todayRadio" name="howLongInput" value="today">
+  <label for="todayRadio">Today</label><br>
+  <input type="radio" id="thisWeekRadio" name="howLongInput" value="thisWeek">
+  <label for="thisWeekRadio">This week</label><br>
+  <input type="radio" id="untilRadio" name="howLongInput" value="until">
+  <label for="untilRadio">Until: <input id="untilInput" type="text" /></label>
+  <button type="button" onclick="onClickChooseForMe()">Choose for me!</button>
+</div>
+<!-- Gotta show the errors somewhere -->
+<span id="errorText"></span>
+<hr>
+<div id="existingEntries">
+  
 </div>
 <script src="index.js"></script>
 </body>
