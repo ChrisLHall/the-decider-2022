@@ -11,9 +11,9 @@
 
 // idk if I will keep old entries around or not, doesn't matter yet
 
+const LOCAL_STORAGE_KEY = "entries";
 let existingEntries = [];
-// todo load from local storage
-
+console.log(existingEntries.push);
 
 function createDecisionEntry(title, optionsList, startDate, endDate) {
   return {
@@ -57,6 +57,13 @@ function addDecisionEntryToPage(entry) {
   document.getElementById("existingEntries").appendChild(entryDiv);
 }
 
+function syncExistingEntries() {
+  document.getElementById("existingEntries").innerText = "";
+  existingEntries.forEach(element => {
+    addDecisionEntryToPage(element);
+  });
+}
+
 function onClickChooseForMe() {
   //let entry = createDecisionEntry("Pick a movie", ["titanic", "smile", "jumanji"], new Date(), tempEndDate);
 
@@ -90,7 +97,11 @@ function onClickChooseForMe() {
   let entry = createDecisionEntry(document.getElementById("titleInput").value, optionsArray, new Date(), endDate);
   console.log(entry);
   chooseOptionForEntry(entry);
-  addDecisionEntryToPage(entry);
+
+  existingEntries.push(entry);
+  window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(existingEntries));
+  //addDecisionEntryToPage(entry);
+  syncExistingEntries();
 
   clearInputs();
 }
@@ -108,3 +119,21 @@ function clearInputs() {
   document.getElementById("todayRadio").checked = true;
   console.log(radio);
 }
+
+
+
+
+// todo load from local storage
+// TODO the dates need to save in int form
+// TODO delete button needs to actually delete the thing from the array
+const loaded = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+
+console.log("loaded");
+console.log(loaded);
+
+if (loaded) {
+  existingEntries = JSON.parse(loaded);
+  syncExistingEntries();
+}
+
+
