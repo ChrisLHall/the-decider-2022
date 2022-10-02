@@ -58,18 +58,36 @@ function addDecisionEntryToPage(entry) {
 }
 
 function onClickChooseForMe() {
-  console.log("hi");
-  console.log(document.getElementById("titleInput").value);
-  console.log(document.getElementById("optionsInput").value);
-  var radioSelected = document.querySelector('input[name="howLongInput"]:checked');
-  if (radioSelected) {
-    console.log(radioSelected.value);
-  }
-  console.log(document.getElementById("untilInput").value);
+  //let entry = createDecisionEntry("Pick a movie", ["titanic", "smile", "jumanji"], new Date(), tempEndDate);
 
-  var tempEndDate = new Date();
-  tempEndDate.setDate(tempEndDate.getDate() + 7);
-  let entry = createDecisionEntry("Pick a movie", ["titanic", "smile", "jumanji"], new Date(), tempEndDate);
+  var titleInput = document.getElementById("titleInput").value;
+  var optionsInput = document.getElementById("optionsInput").value;
+  var optionsArray = optionsInput.split("\n");
+  for (let index = 0; index < optionsArray.length; index++) {
+    optionsArray[index] = optionsArray[index].trim();
+    if (optionsArray[index].length == 0) {
+      optionsArray.splice(index, 1);
+      index--;
+    }
+  }
+
+  var radioSelected = document.querySelector('input[name="howLongInput"]:checked');
+  if (!radioSelected) {
+    // TODO error messages
+    return;
+  }
+  var howLongInput = radioSelected.value;
+  var endDate = new Date();
+  if (howLongInput === "today") {
+    endDate.setDate(endDate.getDate() + 1);
+  } else if (howLongInput === "thisWeek") {
+    endDate.setDate(endDate.getDate() + 7);
+  } else {
+    // until
+    endDate.setDate(endDate.getDate() + parseInt(document.getElementById("daysInput").value));
+  }
+
+  let entry = createDecisionEntry(document.getElementById("titleInput").value, optionsArray, new Date(), endDate);
   console.log(entry);
   chooseOptionForEntry(entry);
   addDecisionEntryToPage(entry);
