@@ -91,4 +91,20 @@ function onClickChooseForMe() {
   console.log(entry);
   chooseOptionForEntry(entry);
   addDecisionEntryToPage(entry);
+
+  clearInputs();
+}
+
+
+function clearInputs() {
+  document.getElementById("titleInput").value = "";
+  document.getElementById("optionsInput").value = "";
+  document.getElementById("daysInput").value = "";
+
+  var radio = document.querySelectorAll('input[name="howLongInput"]');
+  radio.forEach(element => {
+    element.checked = false;
+  });
+  document.getElementById("todayRadio").checked = true;
+  console.log(radio);
 }
