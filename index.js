@@ -25,10 +25,52 @@ function createDecisionEntry(title, optionsList, startDate, endDate) {
   }
 }
 
-function addDecisionEntryToPage(entry) {
+function chooseOptionForEntry(entry) {
+  entry.chosenOption = entry.optionsList[Math.floor(Math.random() * entry.optionsList.length)];
+}
 
+function addDecisionEntryToPage(entry) {
+  var entryDiv = document.createElement("div");
+  entryDiv.className = "decisionEntry";
+  var newNode = document.createElement("p");
+  newNode.innerText = entry.title;
+  entryDiv.appendChild(newNode);
+
+  newNode = document.createElement("p")
+  newNode.className = "chosenItemText";
+  newNode.innerText = entry.chosenOption;
+  entryDiv.appendChild(newNode);
+
+  newNode = document.createElement("p");
+  newNode.className = "endDateText";
+  newNode.innerText = "Until " + entry.endDate.toString();
+  entryDiv.appendChild(newNode);
+
+  newNode = document.createElement("button");
+  newNode.innerText = "Delete";
+  // todo connect this to the entry somehow
+  newNode.onclick = function () {
+    document.getElementById("existingEntries").removeChild(entryDiv);
+  }
+  entryDiv.appendChild(newNode);
+
+  document.getElementById("existingEntries").appendChild(entryDiv);
 }
 
 function onClickChooseForMe() {
   console.log("hi");
+  console.log(document.getElementById("titleInput").value);
+  console.log(document.getElementById("optionsInput").value);
+  var radioSelected = document.querySelector('input[name="howLongInput"]:checked');
+  if (radioSelected) {
+    console.log(radioSelected.value);
+  }
+  console.log(document.getElementById("untilInput").value);
+
+  var tempEndDate = new Date();
+  tempEndDate.setDate(tempEndDate.getDate() + 7);
+  let entry = createDecisionEntry("Pick a movie", ["titanic", "smile", "jumanji"], new Date(), tempEndDate);
+  console.log(entry);
+  chooseOptionForEntry(entry);
+  addDecisionEntryToPage(entry);
 }

@@ -2,7 +2,22 @@ body {
   background-color: #ddd;
 }
 
+p {
+  margin-block-start: 16px;
+  margin-block-end: 16px;
+}
+
 .decisionEntry {
+  margin: 10px;
   padding: 10px;
   background-color: #aaa;
+}
+
+.chosenItemText {
+  font-size: 3em;
+}
+
+.endDateText {
+  color: #444;
+  font-size: .8em;
 }
