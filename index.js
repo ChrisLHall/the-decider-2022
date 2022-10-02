@@ -12,7 +12,9 @@
 // idk if I will keep old entries around or not, doesn't matter yet
 
 const LOCAL_STORAGE_KEY = "entries";
+const LOCAL_STORAGE_ARCHIVE_KEY = "entriesArchive";
 let existingEntries = [];
+let archivedEntries = [];
 
 function createDecisionEntry(title, optionsList, startDate, endDate) {
   return {
@@ -42,12 +44,17 @@ function addDecisionEntryToPage(entry) {
   entryDiv.appendChild(newNode);
 
   newNode = document.createElement("p");
-  newNode.className = "endDateText";
-  newNode.innerText = "Until " + new Date(entry.endDate).toString();
+  if (Date.now() < entry.endDate) {
+    newNode.className = "endDateText";
+    newNode.innerText = "Until " + new Date(entry.endDate).toString();
+  } else {
+    newNode.className = "finishedText";
+    newNode.innerText = "Finished!";
+  }
   entryDiv.appendChild(newNode);
 
   newNode = document.createElement("button");
-  newNode.innerText = "Delete";
+  newNode.innerText = "Archive";
   // todo connect this to the entry somehow
   newNode.onclick = function () {
     removeEntry(entry);
@@ -69,18 +76,21 @@ function removeEntry(entry) {
   if (index >= 0) {
     existingEntries.splice(index, 1);
   }
+  archivedEntries.push(entry);
   saveToLocalStorage();
   syncExistingEntries();
 }
 
 function saveToLocalStorage() {
   window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(existingEntries));
+  window.localStorage.setItem(LOCAL_STORAGE_ARCHIVE_KEY, JSON.stringify(archivedEntries));
 }
 
 function onClickChooseForMe() {
   //let entry = createDecisionEntry("Pick a movie", ["titanic", "smile", "jumanji"], new Date(), tempEndDate);
 
   var titleInput = document.getElementById("titleInput").value;
+  if (titleInput.length === 0) { return; }
   var optionsInput = document.getElementById("optionsInput").value;
   var optionsArray = optionsInput.split("\n");
   for (let index = 0; index < optionsArray.length; index++) {
@@ -90,6 +100,7 @@ function onClickChooseForMe() {
       index--;
     }
   }
+  if (optionsArray.length === 0) { return; }
 
   var radioSelected = document.querySelector('input[name="howLongInput"]:checked');
   if (!radioSelected) {
@@ -140,13 +151,21 @@ function clearInputs() {
 // TODO the dates need to save in int form
 // TODO delete button needs to actually delete the thing from the array
 const loaded = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+const loadedArchive = window.localStorage.getItem(LOCAL_STORAGE_ARCHIVE_KEY);
 
 console.log("loaded:");
 console.log(loaded);
 
+console.log("archive:");
+console.log(loadedArchive);
+
 if (loaded) {
   existingEntries = JSON.parse(loaded);
   syncExistingEntries();
+}
+
+if (loadedArchive) {
+  archivedEntries = JSON.parse(loadedArchive);
 }
 
 

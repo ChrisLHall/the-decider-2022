@@ -7,6 +7,10 @@ p {
   margin-block-end: 16px;
 }
 
+textarea {
+  min-height: 120px;
+}
+
 .decisionEntry {
   margin: 10px;
   padding: 10px;
@@ -22,7 +26,8 @@ p {
   font-size: .8em;
 }
 
-.finishText {
+.finishedText {
   color: #151;
   font-weight: bold;
+  font-size: 2em;
 }
