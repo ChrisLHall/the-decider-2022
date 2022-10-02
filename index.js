@@ -13,15 +13,15 @@
 
 const LOCAL_STORAGE_KEY = "entries";
 let existingEntries = [];
-console.log(existingEntries.push);
 
 function createDecisionEntry(title, optionsList, startDate, endDate) {
   return {
     title: title,
     chosenOption: "",
     optionsList: [...optionsList], // shallow copy
-    startDate: new Date(startDate.getTime()),
-    endDate: new Date(endDate.getTime()),
+    previouslyChosen: [],
+    startDate: startDate.getTime(),
+    endDate: endDate.getTime(),
   }
 }
 
@@ -43,14 +43,14 @@ function addDecisionEntryToPage(entry) {
 
   newNode = document.createElement("p");
   newNode.className = "endDateText";
-  newNode.innerText = "Until " + entry.endDate.toString();
+  newNode.innerText = "Until " + new Date(entry.endDate).toString();
   entryDiv.appendChild(newNode);
 
   newNode = document.createElement("button");
   newNode.innerText = "Delete";
   // todo connect this to the entry somehow
   newNode.onclick = function () {
-    document.getElementById("existingEntries").removeChild(entryDiv);
+    removeEntry(entry);
   }
   entryDiv.appendChild(newNode);
 
@@ -62,6 +62,19 @@ function syncExistingEntries() {
   existingEntries.forEach(element => {
     addDecisionEntryToPage(element);
   });
+}
+
+function removeEntry(entry) {
+  var index = existingEntries.indexOf(entry);
+  if (index >= 0) {
+    existingEntries.splice(index, 1);
+  }
+  saveToLocalStorage();
+  syncExistingEntries();
+}
+
+function saveToLocalStorage() {
+  window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(existingEntries));
 }
 
 function onClickChooseForMe() {
@@ -99,7 +112,7 @@ function onClickChooseForMe() {
   chooseOptionForEntry(entry);
 
   existingEntries.push(entry);
-  window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(existingEntries));
+  saveToLocalStorage();
   //addDecisionEntryToPage(entry);
   syncExistingEntries();
 
@@ -128,7 +141,7 @@ function clearInputs() {
 // TODO delete button needs to actually delete the thing from the array
 const loaded = window.localStorage.getItem(LOCAL_STORAGE_KEY);
 
-console.log("loaded");
+console.log("loaded:");
 console.log(loaded);
 
 if (loaded) {
